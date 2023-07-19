@@ -18,8 +18,8 @@ for c_cls in curious_cls:
     assert c_cls in all_cls_names
     curious_cls_id[str(all_cls_names.index(c_cls))] = c_cls
 
-yolo_root = rf"J:\train_dataset\2023_07_05_five_cls\five_cls"
-extract_root = rf"J:\train_dataset\2023_07_05_five_cls\five_cls\classification"
+yolo_root = rf"/data/fridge/five_cls"
+extract_root = rf"/data/fridge/five_cls/classification"
 
 yolo_root_path = Path(yolo_root)
 yolo_image_path = yolo_root_path.joinpath("images")
@@ -28,11 +28,12 @@ yolo_label_path = yolo_root_path.joinpath("labels")
 extract_root_path = Path(extract_root)
 extract_image_path = extract_root_path.joinpath("images")
 extract_label_path = extract_root_path.joinpath("labels")
-extract_image_path.mkdir(exist_ok=True)
-extract_label_path.mkdir(exist_ok=True)
 
 shutil.rmtree(extract_image_path, ignore_errors=True)
 shutil.rmtree(extract_label_path, ignore_errors=True)
+
+extract_image_path.mkdir(parents=True, exist_ok=True)
+extract_label_path.mkdir(parents=True, exist_ok=True)
 
 lock = Lock()
 file_annotation_instance_count = {}
