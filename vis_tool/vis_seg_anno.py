@@ -1,8 +1,4 @@
-import cv2
 from PIL import Image, ImageDraw
-import numpy as np
-import os
-from pathlib import Path
 
 
 def parse_txt(_txt_path):
