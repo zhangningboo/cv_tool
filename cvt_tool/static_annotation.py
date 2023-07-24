@@ -1,4 +1,8 @@
 import os
+import matplotlib
+import matplotlib.pyplot as plt
+
+matplotlib.rc('font', family='FangSong', weight='bold')
 
 all_labels = set([])
 all_labels_num = {}
@@ -28,8 +32,10 @@ def get_file_absolute_path(root_path: str):
 
 
 dir_list = [
-    rf'J:\train_dataset\2023_07_05_five_cls\five_cls\classification',
+    rf'/yolo/format/data/path',
 ]
+
+cls_names = ['person',]
 
 if __name__ == '__main__':
     exists = {}
@@ -43,8 +49,23 @@ if __name__ == '__main__':
         if item not in exists_labels:
             exists_labels.append(item)
 
-    for i in range(len(all_labels_num.keys())):
-        print(f"{exists_labels[i]}:{all_labels_num[i]}")
-
     print(f'合并后标签数：{len(exists_labels)}')
     print(f'合并后标签：{exists_labels}')
+
+    exists_labels.sort(key=lambda x: int(x))
+    instance_num = []
+    label_tag = []
+    for k in exists_labels:
+        instance_num.append(all_labels_num[k])
+        label_tag.append(cls_names[int(k)])
+    plt.figure(figsize=(8, 6))
+
+    for b, i in zip(instance_num, range(len(label_tag))):  # zip 函数
+        plt.text(i, b + 10, str(instance_num[i]), ha='center', fontsize=14)  # plt.text 函数
+
+    plt.xticks(range(len(label_tag)), label_tag, rotation=45)
+    plt.bar(range(len(exists_labels)), instance_num, width=0.6, )
+    plt.show()
+
+    print(f'排序后标签数：{instance_num}')
+    print(f'排序后标签：{exists_labels}')
