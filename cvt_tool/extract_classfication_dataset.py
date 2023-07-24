@@ -6,20 +6,22 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
 from multiprocessing import cpu_count
 
-all_cls_names = ['苹果', '茄子', '胡萝卜', '人脸', '手', '芹菜', '牛奶瓶装', '牛奶盒装', '人体', '酸奶盒装', '抽屉']
-curious_cls = ['苹果', '茄子', '胡萝卜', '手', '芹菜', '牛奶盒装', '酸奶盒装', ]
+pool_threads_num = cpu_count() // 2
+
+all_cls_names = ['apple', 'person', ]
+extract_cls = ['person', ]
 
 curious_num = [0] * len(all_cls_names)
 bbox_num = 1000
 
 curious_cls_id = {}
 
-for c_cls in curious_cls:
+for c_cls in extract_cls:
     assert c_cls in all_cls_names
     curious_cls_id[str(all_cls_names.index(c_cls))] = c_cls
 
-yolo_root = rf"/data/fridge/five_cls"
-extract_root = rf"/data/fridge/five_cls/classification"
+yolo_root = rf"/yolo/root/path"
+extract_root = rf"/save/path"
 
 yolo_root_path = Path(yolo_root)
 yolo_image_path = yolo_root_path.joinpath("images")
@@ -56,7 +58,7 @@ def get_annotation_content(label_file: str):
 
 
 label_files = os.listdir(yolo_label_path)
-with ThreadPoolExecutor(max_workers=cpu_count() // 2) as pool:
+with ThreadPoolExecutor(max_workers=pool_threads_num) as pool:
     with tqdm(total=len(label_files), desc="Getting all annotation record...") as progress:
         tasks = [pool.submit(get_annotation_content, label_file) for label_file in label_files]
         for _ in as_completed(tasks):
@@ -74,13 +76,18 @@ for cls in tqdm(curious_cls_id.keys(), desc="Extracting Files by Rules..."):
     cls_file_dict = [{x: file_annotation_instance_count[x]} for x in cls_files]
     if len(cls_file_dict):
         cls_file_dict.sort(key=lambda x: x[list(x.keys())[0]][cls])
-        cls_file_dict = cls_file_dict[::-1]
+        # cls_file_dict = cls_file_dict[::-1]
 
         for file_annotation in cls_file_dict:
             cls_instance_num = curious_num[int(cls)]
             file_name = list(file_annotation.keys())[0]
+            if max(file_annotation[file_name].values()) > 3:
+                continue
             if cls_instance_num > bbox_num or file_name in picked_files:
                 break
+            for f_cls in file_annotation[file_name].keys():
+                if curious_num[int(f_cls)] < bbox_num:
+                    break
             for f_cls in file_annotation[file_name].keys():
                 curious_num[int(f_cls)] += file_annotation[file_name][f_cls]
             picked_files.add(file_name)
@@ -97,7 +104,7 @@ def move_file(label_file_name: str):
     shutil.copy(src_label, dst_label)
 
 
-with ThreadPoolExecutor(max_workers=cpu_count() // 2) as pool:
+with ThreadPoolExecutor(max_workers=pool_threads_num) as pool:
     with tqdm(total=len(picked_files), desc="Saving Extracted Files...") as progress:
         tasks = [pool.submit(move_file, picked_file) for picked_file in picked_files]
         for _ in as_completed(tasks):
