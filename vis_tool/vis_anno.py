@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import random
 
-font = ImageFont.truetype('C:/Windows/Fonts/msyhbd.ttc', 22)
+font = ImageFont.truetype('/usr/share/fonts/TTF/JetBrainsMonoNLNerdFontMono-LightItalic.ttf', 22)
 
 
 def get_font_render_size(text):
@@ -15,7 +15,10 @@ def get_font_render_size(text):
 
 
 def draw_img(draw, label, tp_x, tp_y, br_x, br_y):
-    print(label, tp_x, tp_y, br_x, br_y)
+    # print(label, " x1_y1_x2_y2:", tp_x, tp_y, br_x, br_y)
+    w = br_x - tp_x
+    h = br_y - tp_y
+    print(label, " x1_y1_w_h:", ', '.join(map(str, [tp_x, tp_y, w, h])))
     tp_x, tp_y, br_x, br_y = map(int, [tp_x, tp_y, br_x, br_y])
     color = [random.randint(0, 255) for _ in range(3)]
     # box
@@ -52,6 +55,7 @@ def vis_cls_xywh(annos, draw, H, W):
         tp_y = y
         br_x = x + w
         br_y = y + h
+        print(cls, "x1_y1_w_h", x, y, w, h, "x1_y1_x2_y2:", tp_x, tp_y, br_x, br_y)
         draw_img(draw, cls, tp_x, tp_y, br_x, br_y)
 
 
@@ -82,18 +86,16 @@ if __name__ == '__main__':
     # ann_path = r"H:\workspace-pycharm\ultralytics\runs\detect\predict4\labels\2023_06_30_17_18_58_right.avi_14.txt"
     # img_path = r"J:\big_model_test\获取到的视频\2023_06_30_17_18_58_right.avi_imgs\2023_06_30_17_18_58_right.avi_14.jpg"
 
-    img_path = rf"J:\train_dataset\2023_07_05_five_cls\five_cls\coco_test\coco_root\train2017\2022_04_21_17_57_37_left_0130.jpg"
-    ann_path = rf"J:\train_dataset\2023_07_05_five_cls\five_cls\coco_test\coco_root\annotations\test.txt"
+    img_path = rf"/home/ningboo/Downloads/val2017/000000397133.jpg"
+    ann_path = rf"/data/workspace/workspace-pycharm/ai/cv_tool/vis_tool/000000397133.txt"
 
     image = Image.open(img_path)
     W, H = image.size
-    print(W, H)
 
     ann = []
     with open(ann_path, 'r', encoding='UTF-8') as f:
         lines = f.readlines()
         for idx, line in enumerate(lines):
-            print(idx + 1, line)
             ann.append(line.strip().split(' '))
     draw = ImageDraw.Draw(image)
 
