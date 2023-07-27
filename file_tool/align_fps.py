@@ -55,7 +55,11 @@ class AlignFps:
             else:
                 # TODO
                 raise "Haven't implement"
-        self.video_aligned_frames = np.array(self.video_aligned_frames)
+        min_frames = min(len(video) for video in self.video_aligned_frames)
+        video_frame_len = min_frames // self.max_fps * self.max_fps
+        video_frame_len = int(video_frame_len)
+        videos_frames = [aligned_frame[:video_frame_len + 1] for aligned_frame in self.video_aligned_frames]
+        self.video_aligned_frames = np.array(videos_frames)
 
     def combine_videos(self):
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -82,11 +86,11 @@ class AlignFps:
 
 if __name__ == '__main__':
     video_files = [
-        rf'/home/ningboo/Downloads/10fps_co_track.mp4',
-        rf'/home/ningboo/Downloads/20fps_co_track.mp4',
-        # rf'/home/ningboo/Downloads/30fps_co_track.mp4',
+        rf'/path/to/video1',
+        rf'/path/to/video2',
+        rf'/path/to/video3',
     ]
 
-    dst_file = rf'./align.mp4'
+    dst_file = rf'/path/to/out.mp4'
     align_tool = AlignFps(dst_file, video_files)
     align_tool.run()
