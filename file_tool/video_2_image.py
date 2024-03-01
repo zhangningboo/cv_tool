@@ -34,5 +34,5 @@ class Video2Image:
 
 
 if __name__ == '__main__':
-    src_video_file = r"/path/to/video"
+    src_video_file = rf"E:\Videos\2022_09_05_18_02_54_left.mp4"
     Video2Image(src_video_file=src_video_file).run()

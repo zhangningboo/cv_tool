@@ -51,12 +51,12 @@ class Images2Video:
 
 
 def images_sort_func(file_name):
-    return int(file_name.split('_')[-2])  # 排序： xxxx_xx_xx_timestamp_123.jpg
+    return int(file_name.split('_')[-1].replace('.jpg', ''))  # 排序： xxxx_xx_xx_timestamp_123.jpg
 
 
 if __name__ == '__main__':
-    image_dir = rf'/path/to/images'
-    images_name_prefix = rf'/images/prefix'
+    image_dir = rf'E:\Videos\111'
+    images_name_prefix = rf'2022_09_05_18_02_54_left'
 
     images2video = Images2Video(image_dir, images_name_prefix=images_name_prefix, images_sort_func=images_sort_func)
     images2video.run()
