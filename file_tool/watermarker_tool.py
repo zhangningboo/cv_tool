@@ -53,7 +53,7 @@ class Watermarker:
 
 
 if __name__ == '__main__':
-    image_file = rf"E:\Pictures\身份证-背面.jpg"
-    watermark_text = rf"仅限贝锐修改手机号使用"
+    image_file = rf"path\to\image.jpg"
+    watermark_text = rf"marker text"
     marker = Watermarker(image_file=image_file, watermark_text=watermark_text)
     marker.fmt()
