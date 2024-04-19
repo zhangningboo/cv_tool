@@ -8,8 +8,27 @@
             "name": "labelme_2_coco.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/cvt_fmt/labelme_2_coco.py",
+            "program": "cvt_fmt/labelme_2_coco.py",
             "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "qwen_process.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "cvt_fmt/nuscenes/qwen_process.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "file_tool/find_all_image.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "file_tool/find_all_image.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
             "justMyCode": false
         }
     ]
