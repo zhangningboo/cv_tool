@@ -14,8 +14,8 @@ class RenameTool:
         res = defaultdict(list)
         dir_queue = [self.data_path]
         while dir_queue:
-            dir_path = dir_queue.pop()
-            for anything in dir_path.glob('*'):
+            current_path = dir_queue.pop()
+            for anything in current_path.glob('*'):
                 if anything.is_dir():
                     dir_queue.append(anything)
                     continue
