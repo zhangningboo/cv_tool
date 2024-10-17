@@ -36,11 +36,12 @@ class Images2Video:
                 video_name = self.images_path.name + '.mp4'
             else:
                 video_name = self.images_name_prefix + '.mp4'
-            self.video_path = self.images_path.joinpath(video_name)
+            self.video_path = self.images_path.parent.joinpath(video_name)
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        print(self.video_path.parent.absolute().as_posix())
         video_writer = cv2.VideoWriter(self.video_path.absolute().as_posix(), fourcc, self.fps, (w, h))
-        for image_path in tqdm(self.images):
+        for image_path in tqdm([*self.images]):
             frame = cv2.imread(image_path)
             video_writer.write(frame)
         video_writer.release()
@@ -55,8 +56,12 @@ def images_sort_func(file_name):
 
 
 if __name__ == '__main__':
-    image_dir = rf'E:\Videos\111'
-    images_name_prefix = rf'2022_09_05_18_02_54_left'
+    root_path = Path(rf'/Volumes/WD_BLACK/dust/2024-08-31_all')
+    for anything in root_path.glob('*'):
+        if not anything.is_dir():
+            continue
+        image_dir = anything.absolute().as_posix()
+        images_name_prefix = None
 
-    images2video = Images2Video(image_dir, images_name_prefix=images_name_prefix, images_sort_func=images_sort_func)
-    images2video.run()
+        images2video = Images2Video(image_dir, images_name_prefix=images_name_prefix, images_sort_func=images_sort_func, fps=25)
+        images2video.run()

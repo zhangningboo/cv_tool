@@ -47,6 +47,6 @@ class Video2Image:
 
 
 if __name__ == '__main__':
-    src_video_file = rf"/Volumes/WD_BLACK/dataset/public_fire_smoke/20240925_Visfire/Smoke_Manavgat_Raw.avi"
-    dst_image_path = rf"/Volumes/WD_BLACK/dataset/public_fire_smoke/20240925_Visfire/Smoke_Manavgat_Raw"
+    src_video_file = rf"/Users/zhangningboo/Downloads/X-01_5hao_yuan_20241014170000-20241014180000_2(1).mp4"
+    dst_image_path = rf"/Users/zhangningboo/Downloads/X-01_5hao_yuan_20241014170000-20241014180000_2(1)"
     Video2Image(src_video_file=src_video_file, dst_image_path=dst_image_path, extract_frame=True).run(cnt=0)
