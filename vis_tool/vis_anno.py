@@ -1,7 +1,18 @@
 from PIL import Image, ImageDraw, ImageFont
 import random
+import platform
 
-font = ImageFont.truetype('C:/Windows/Fonts/msyhbd.ttc', 22)
+system_version = platform.platform()
+if 'Linux' in system_version:
+    font_file = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+elif 'macOS' in system_version:
+    font_file = "/System/Library/Fonts/Monaco.ttf"
+elif 'Windows':
+    font_file = 'C:/Windows/Fonts/msyhbd.ttc'
+else:
+    raise NotImplemented
+
+font = ImageFont.truetype(font_file, 22)
 
 
 def get_font_render_size(text):
@@ -10,8 +21,7 @@ def get_font_render_size(text):
     draw.text((0, 0), text, font=font, fill=(255, 255, 255))
     bbox = canvas.getbbox()
     # 宽高
-    size = (bbox[2] - bbox[0] + 4, bbox[3] - bbox[1] + 6)
-    return size
+    return bbox[2] - bbox[0] + 4, bbox[3] - bbox[1] + 6
 
 
 def draw_img(draw, label, tp_x, tp_y, br_x, br_y):
@@ -72,18 +82,9 @@ def vis_cls_cxcywh(annos, draw, H, W):
 
 
 if __name__ == '__main__':
-    # ann_path = r"D:\ningd\Downloads\archive\coco128\labels\train2017\000000000034.txt"
-    # img_path = r"D:\ningd\Downloads\archive\coco128\images\train2017\000000000034.jpg"
 
-    # ann_path = r"D:\workspace\workspace-pycharm\dataset_util\src\dataset_trans_util\000000016228.txt"
-    # img_path = r"D:\workspace\workspace-pycharm\dataset_util\src\dataset_trans_util\000000016228.jpg"
-
-    # ann_path = r"N:\20230530冰箱数据1\2022_04_21_17_57_37_left_0200.txt"
-    # ann_path = r"H:\workspace-pycharm\ultralytics\runs\detect\predict4\labels\2023_06_30_17_18_58_right.avi_14.txt"
-    # img_path = r"J:\big_model_test\获取到的视频\2023_06_30_17_18_58_right.avi_imgs\2023_06_30_17_18_58_right.avi_14.jpg"
-
-    img_path = rf"J:\train_dataset\2023_07_05_five_cls\five_cls\coco_test\coco_root\train2017\2022_04_21_17_57_37_left_0130.jpg"
-    ann_path = rf"J:\train_dataset\2023_07_05_five_cls\five_cls\coco_test\coco_root\annotations\test.txt"
+    img_path = rf"/data/sdb1/dataset/dust_action/yolo_cleaner/images/94ba07c2-7baf-4f43-966d-c201a3508132_999.jpg"
+    ann_path = rf"/data/sdb1/dataset/dust_action/yolo_cleaner/labels/94ba07c2-7baf-4f43-966d-c201a3508132_999.txt"
 
     image = Image.open(img_path)
     W, H = image.size
@@ -97,9 +98,9 @@ if __name__ == '__main__':
             ann.append(line.strip().split(' '))
     draw = ImageDraw.Draw(image)
 
-    func = vis_cls_xywh
-    # func = vis_cls_cxcywh
+    # func = vis_cls_xywh
+    func = vis_cls_cxcywh
     # func = vis_cls_x1y1x2y2
     print(func.__name__)
     func(ann, draw, H, W)
-    image.show(title=str(func.__name__))
+    image.save('./tmp.jpg')
